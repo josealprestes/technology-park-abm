@@ -1,0 +1,34 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.env
+.env.*
+ dist/
+build/
+*.egg-info/
+.coverage
+htmlcov/
+outputs/
+results/
+data/*
+!data/manifest.json
+.DS_Store
+.vscode/
+.idea/
+
+# artefatos locais de verificacao visual (nao versionar)
+screenshots/
+dashboard.out.log
+dashboard.err.log
+
+# artefatos de mutation testing (ADR 0013): mutmut e cosmic-ray geram
+# diretorios/arquivos de sessao locais; o lockfile uv.lock NAO entra aqui
+mutants/
+cosmic-ray.session.sqlite
+
+# artefato local de ferramenta CLI (nao versionar)
+.commandcode/

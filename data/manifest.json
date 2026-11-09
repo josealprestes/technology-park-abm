@@ -1,0 +1,226 @@
+{
+  "schema_version": "1.1",
+  "sources": [
+    {
+      "name": "worldbank_tech_exports_brazil",
+      "description": "High-technology exports (% of manufactured exports), Brazil (TX.VAL.TECH.MF.ZS)",
+      "url": "https://api.worldbank.org/v2/country/BRA/indicator/TX.VAL.TECH.MF.ZS?format=json&per_page=200",
+      "license": "World Bank Open Data, CC BY 4.0",
+      "filename": "worldbank_tech_exports_brazil.json",
+      "fields": [
+        "year",
+        "value"
+      ],
+      "status": "downloaded",
+      "sha256": "26e7349edb8ecf90fffa1ce1c9b348fcc58c069e4ed0af6a8f7e88e26e7b8fb4",
+      "accessed_utc": "2026-10-07T21:25:57.584718+00:00",
+      "notes": "Replaces GB.XPD.RSD.GD.ZS (R&D expenditure), which the World Bank API now rejects.",
+      "legal_basis": "World Bank Open Data Terms of Use (CC BY 4.0); Decreto 8.777/2016",
+      "personal_data": "aggregated"
+    },
+    {
+      "name": "worldbank_patents_brazil",
+      "description": "Patent applications by residents, Brazil (IP.PAT.RESD)",
+      "url": "https://api.worldbank.org/v2/country/BRA/indicator/IP.PAT.RESD?format=json&per_page=200",
+      "license": "World Bank Open Data, CC BY 4.0",
+      "filename": "worldbank_patents_brazil.json",
+      "fields": [
+        "year",
+        "value"
+      ],
+      "status": "downloaded",
+      "sha256": "32a3f278d1b11d722b88892c50f8b6d4cbd3ad9803727fc1870ed4d44c5b9132",
+      "accessed_utc": "2026-10-06T21:50:38.968657+00:00",
+      "legal_basis": "World Bank Open Data Terms of Use (CC BY 4.0); Decreto 8.777/2016",
+      "personal_data": "aggregated"
+    },
+    {
+      "name": "brasilapi_cnpj_sample",
+      "description": "Aggregated anchor-firm statistics from a real public CNPJ sample (BrasilAPI): porte shares, capital and age quantiles",
+      "url": "https://brasilapi.com.br/api/cnpj/v1/{cnpj}",
+      "license": "Open data (company registry); aggregated output only",
+      "filename": "anchor_sample.json",
+      "fields": [
+        "porte_shares",
+        "capital_*",
+        "age_*"
+      ],
+      "status": "downloaded",
+      "sha256": "a86df3e2f66ba5467bc65e3d4f7c17948e54643f3815efca8e0b3e7a76a2405f",
+      "accessed_utc": "2026-10-07T21:24:27.509316+00:00",
+      "summary": {
+        "count": 10,
+        "porte_shares": {
+          "DEMAIS": 1.0
+        },
+        "capital_min": 2962584600.0,
+        "capital_median": 14202162000.0,
+        "capital_max": 205431960000.0,
+        "age_min": 21.0,
+        "age_median": 43.0,
+        "age_max": 82.0
+      },
+      "legal_basis": "Public business registry (Lei 8.934/1994); legal-entity data, aggregated output only",
+      "personal_data": "none"
+    },
+    {
+      "name": "ibge_pnadc_educacao_ocupados",
+      "description": "PNAD Continua anual, tabela 7107: distribuicao percentual das pessoas de 14 anos ou mais ocupadas, por nivel de instrucao (SIDRA variavel 4108, categorias 9493/9494/9495/99713/120704)",
+      "url": "https://apisidra.ibge.gov.br/values/t/7107/n1/all/v/4108/p/2025/c1568/9493,9494,9495,99713,120704",
+      "license": "IBGE open data (Decreto 8.777/2016)",
+      "filename": "ibge_pnadc_educacao_ocupados.json",
+      "fields": [
+        "nivel_instrucao",
+        "percentual"
+      ],
+      "status": "downloaded",
+      "legal_basis": "IBGE open data (Decreto 8.777/2016); SIDRA agregados oficiais",
+      "personal_data": "aggregated",
+      "notes": "Education marginal of the employed; complements the RAIS 2023 schooling shares built into empirical.py.",
+      "sha256": "25760b289f4e9f0fbfa8f90252147742c5e838587b641c417bca38a73b86c547",
+      "accessed_utc": "2026-10-22T11:03:26.891501+00:00"
+    },
+    {
+      "name": "ibge_pnadc_rendimento_instrucao",
+      "description": "PNAD Continua anual, tabela 10376: rendimento medio mensal real das pessoas ocupadas com rendimento de trabalho, por nivel de instrucao (SIDRA variavel 5932, categorias 9493/9494/9495/99713/120704)",
+      "url": "https://apisidra.ibge.gov.br/values/t/10376/n1/all/v/5932/p/2025/c1568/9493,9494,9495,99713,120704",
+      "license": "IBGE open data (Decreto 8.777/2016)",
+      "filename": "ibge_pnadc_rendimento_instrucao.json",
+      "fields": [
+        "nivel_instrucao",
+        "rendimento_medio_mensal_reais"
+      ],
+      "status": "downloaded",
+      "legal_basis": "IBGE open data (Decreto 8.777/2016); SIDRA agregados oficiais",
+      "personal_data": "aggregated",
+      "notes": "Wage-by-education means; some cells are suppressed by SIDRA ('...').",
+      "sha256": "9a7ea0febff9aef26cc30ac912089086e13b473b014fc9d0207b62150d89483e",
+      "accessed_utc": "2026-10-22T11:03:27.004426+00:00"
+    },
+    {
+      "name": "ibge_pnadc_ocupados_idade",
+      "description": "PNAD Continua anual, tabela 7432: distribuicao percentual das pessoas de 14 anos ou mais ocupadas com rendimento, por grupo de idade (SIDRA variavel 10767, classificacao 58)",
+      "url": "https://apisidra.ibge.gov.br/values/t/7432/n1/all/v/10767/p/2025/c58/all",
+      "license": "IBGE open data (Decreto 8.777/2016)",
+      "filename": "ibge_pnadc_ocupados_idade.json",
+      "fields": [
+        "grupo_idade",
+        "percentual"
+      ],
+      "status": "downloaded",
+      "legal_basis": "IBGE open data (Decreto 8.777/2016); SIDRA agregados oficiais",
+      "personal_data": "aggregated",
+      "notes": "Age marginal of the employed; complements the RAIS 2023 age bands.",
+      "sha256": "6d33faee37e992109ded3e1d6600668fa3ab8b8371e6603cbf160d55ba9388a0",
+      "accessed_utc": "2026-10-22T11:03:27.075543+00:00"
+    },
+    {
+      "name": "ibge_cempre_pessoal_secao_cnae",
+      "description": "CEMPRE (Cadastro Central de Empresas), tabela 3421: pessoal ocupado total e salario medio mensal de unidades locais atuantes, por secao/divisao CNAE 2.0, municipios com 50 mil habitantes ou mais, 2021 (SIDRA variaveis 707 e 1606, classificacao 12762)",
+      "url": "https://apisidra.ibge.gov.br/values/t/3421/n1/all/v/707,1606/p/2021/c12762/all",
+      "license": "IBGE open data (Decreto 8.777/2016)",
+      "filename": "ibge_cempre_pessoal_secao_cnae.json",
+      "fields": [
+        "cnae_2_0",
+        "pessoal_ocupado_total",
+        "salario_medio_mensal"
+      ],
+      "status": "downloaded",
+      "legal_basis": "IBGE open data (Decreto 8.777/2016); SIDRA agregados oficiais",
+      "personal_data": "aggregated",
+      "notes": "Sector employment and wage structure; series encerrada em 2021, municipios >= 50 mil habitantes.",
+      "sha256": "3e5021d6d535f6fd0b6a6b44c48b3a6493ce3b812a28c9876e16a76386065627",
+      "accessed_utc": "2026-10-22T11:03:27.191071+00:00"
+    },
+    {
+      "name": "ibge_demografia_nascimentos_sobrevivencia",
+      "description": "Demografia das Empresas, tabela 9949: nascimentos de empresas empregadoras e taxas de sobrevivencia de 1 a 5 anos, por secao CNAE 2.0 e faixa de pessoal ocupado, 2021 (SIDRA variaveis 13234-13239, classificacoes 12762 e 370)",
+      "url": "https://apisidra.ibge.gov.br/values/t/9949/n1/all/v/13234,13235,13236,13237,13238,13239/p/2021/c12762/all/c370/all",
+      "license": "IBGE open data (Decreto 8.777/2016)",
+      "filename": "ibge_demografia_nascimentos_sobrevivencia.json",
+      "fields": [
+        "cnae_2_0",
+        "faixa_pessoal_ocupado",
+        "nascimentos",
+        "taxa_sobrevivencia_1a5"
+      ],
+      "status": "downloaded",
+      "legal_basis": "IBGE open data (Decreto 8.777/2016); SIDRA agregados oficiais",
+      "personal_data": "aggregated",
+      "notes": "Entry and survival calibration targets (docs/data-and-calibration.md).",
+      "sha256": "7014a226433c11034b583854128a3d69b82348e0085a8c52b04aa90f5839213d",
+      "accessed_utc": "2026-10-22T11:03:28.712016+00:00"
+    },
+    {
+      "name": "inpi_bulk_patents",
+      "description": "INPI bulk patent and trademark datasets; manual retrieval with registration",
+      "url": "https://www.gov.br/inpi/pt-br/acesso-a-informação/dados-abertos",
+      "license": "Brazilian open government data (varies per dataset)",
+      "filename": null,
+      "fields": [
+        "deposits",
+        "holders",
+        "classification"
+      ],
+      "status": "catalog-only",
+      "sha256": null,
+      "accessed_utc": null,
+      "notes": "Requires manual retrieval; not automated by policy.",
+      "legal_basis": "Brazilian open government data (Decreto 8.777/2016); publication of registry records, but holder/inventor names are personal data - manual retrieval only (ADR 0012)",
+      "personal_data": "personal"
+    },
+    {
+      "name": "mte_rais_microdata",
+      "description": "RAIS microdata (estabelecimento e trabalhador), TXT bulk via FTP (ftp.mtps.gov.br/pdet/microdados/); worker-level records",
+      "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informação/acoes-e-programas/programas-projetos-acoes-obras-e-atividades/estatisticas-trabalho/microdados-rais-e-caged",
+      "license": "MTE/PDET terms of use (bulk TXT microdata)",
+      "filename": null,
+      "fields": [
+        "estabelecimento",
+        "trabalhador",
+        "vinculo"
+      ],
+      "status": "catalog-only",
+      "legal_basis": "Out of scope: worker-level personal data (LGPD art. 5, I) with no documented legal basis for this project (ADR 0012)",
+      "personal_data": "personal",
+      "notes": "Bulk download only; not automated by policy. Aggregates via SIDRA cover the same calibration targets.",
+      "sha256": null,
+      "accessed_utc": null
+    },
+    {
+      "name": "mte_novo_caged_microdata",
+      "description": "Novo CAGED microdata (movimentacoes mensais de admissao e desligamento), TXT bulk via FTP; worker-level records",
+      "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informação/acoes-e-programas/programas-projetos-acoes-obras-e-atividades/estatisticas-trabalho/microdados-rais-e-caged",
+      "license": "MTE/PDET terms of use (bulk TXT microdata)",
+      "filename": null,
+      "fields": [
+        "movimentacao",
+        "trabalhador",
+        "estabelecimento"
+      ],
+      "status": "catalog-only",
+      "legal_basis": "Out of scope: worker-level personal data (LGPD art. 5, I) with no documented legal basis for this project (ADR 0012)",
+      "personal_data": "personal",
+      "notes": "Bulk download only; monthly flows would need an aggregate publication, which MTE does not expose as an open API.",
+      "sha256": null,
+      "accessed_utc": null
+    },
+    {
+      "name": "mte_caged_estatistico",
+      "description": "CAGED Estatistico (base PAINEL/VINCULO de movimentacoes), acesso mediante solicitacao e aprovacao do MTE com senha",
+      "url": "https://acesso.trabalho.gov.br/portal-pdet/o-pdet/portifolio-de-produtos/bases-de-dados.htm",
+      "license": "MTE approval required (authenticated access)",
+      "filename": null,
+      "fields": [
+        "movimentacao",
+        "vínculo"
+      ],
+      "status": "catalog-only",
+      "legal_basis": "Out of scope: authenticated source (ADR 0004) and worker-level personal data (ADR 0012)",
+      "personal_data": "personal",
+      "notes": "Requires MTE approval and password; any future use needs a new ADR.",
+      "sha256": null,
+      "accessed_utc": null
+    }
+  ]
+}

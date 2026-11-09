@@ -1,0 +1,78 @@
+function measurement(){
+ const thresholds=Object.fromEntries(activeConditions().map(c=>[c,scenario(c).config.productive_tie_strength_threshold]));
+ const incompatible=state.mode==="compare"&&state.key==="productive_tie_count"&&thresholds.A!==thresholds.B;
+ const thresholdText=n=>new Intl.NumberFormat("pt-BR",{maximumSignificantDigits:21}).format(n);
+ const unit=state.key!=="productive_tie_count"?meta[state.key].unit:incompatible?`A: força ≥ ${thresholdText(thresholds.A)} · B: força ≥ ${thresholdText(thresholds.B)} · médias de contagens com definições diferentes`:`Parcerias com força ≥ ${thresholdText(thresholds.A)} · média de contagens`;
+ return {metric:state.key,unit,thresholds:state.key==="productive_tie_count"?thresholds:null,comparable:!incompatible,limitation:incompatible?"Os limiares mudam a definição da contagem. Diferença B − A não calculada; use o mesmo limiar para comparar parcerias produtivas.":null};
+}
+function setConditionLabels(){
+ const comparing=state.mode==="compare";
+ for(const c of ["A","B"]){const item=scenario(c);$("condition-label-"+c.toLowerCase()).textContent=(c==="A"&&comparing?"A · ":"")+item.name;$("network-condition").querySelector(`[value="${c}"]`).textContent=(comparing?c+" · ":"")+item.name;}
+ $("legend-a").textContent=(comparing?"A":"Cenário")+" · Linha contínua";
+}
+function go(step){
+ if(state.busy)return;
+ if(step>=2&&!state.prepared){go(1);$("status").textContent="Escolha o caminho, confira os parâmetros e execute para explorar.";return;}
+ stop();state.step=step;document.querySelectorAll("[data-page]").forEach(page=>page.hidden=Number(page.dataset.page)!==step);
+ document.querySelectorAll("[data-step]").forEach(button=>{if(Number(button.dataset.step)===step)button.setAttribute("aria-current","step");else button.removeAttribute("aria-current");});
+ update();$("title-"+step).focus({preventScroll:true});window.scrollTo(0,0);$("status").textContent=`Etapa ${step+1} de 4 · ${["Entender","Preparar","Explorar","Concluir"][step]}`;
+}
+function update(){
+ if(!state.prepared)return;
+ const comp=state.mode==="compare",m=meta[state.key],measure=measurement(),comparable=measure.comparable,a=average("A"),b=comp?average("B"):0,p=comp&&comparable?paired():null;
+ setConditionLabels();
+ document.querySelectorAll("[data-scope]").forEach(node=>node.textContent=scopeText());
+ $("figure-scope").textContent=scopeText();
+ $("timeline").max=String(state.horizon);$("timeline").value=String(state.period);$("timeline").setAttribute("aria-valuetext",`Período ${state.period} de ${state.horizon}`);
+ $("timeline-period").textContent=state.period===0?"Estado inicial":`Período ${state.period} de ${state.horizon}`;
+ $("metric-heading").textContent=m.label;$("metric-unit").textContent=measure.unit;
+ $("value-a").textContent=fmt(a,m.digits);$("value-b").textContent=comp?fmt(b,m.digits):"";$("value-delta").textContent=comp?(comparable?signed(b-a,m.digits):"—"):"";
+ $("delta-scope").textContent=comparable?"Nas mesmas sementes":"Definições diferentes";
+ const initial=mean(runs("A").map(run=>run.initial[state.key]));
+ $("reading-heading").textContent=comp?(comparable?"O resultado se repete?":"As contagens são comparáveis?"):"Como o cenário evoluiu?";
+ $("paired-reading").textContent=comp?(!comparable?measure.limitation:`No período ${state.period}, B ficou acima de A em ${p.positive} de ${state.n} sementes, abaixo em ${p.negative} e igual em ${p.equal}. Acima ou abaixo descreve o valor; não significa necessariamente melhor ou pior.`):`No período ${state.period}, o valor médio é ${fmt(a,m.digits)}. A diferença em relação ao estado inicial é ${signed(a-initial,m.digits)}. Essa evolução descreve o cenário; não isola uma causa.`;
+ $("uncertainty-reading").textContent=state.n===1?"Uma semente mostra uma trajetória. Não há faixa nem estimativa de variabilidade entre sementes.":`A linha mostra a média de ${state.n} sementes${comp?" por cenário":""}. A área é a faixa p10–p90 entre essas sementes, não um intervalo de confiança nem uma previsão. Rede e eventos mostram a semente ${runs("A")[0].seed}.`;
+ $("chart-caption").textContent=comp?`Até o período ${state.period}: ${m.label.toLowerCase()}, A ${fmt(a,m.digits)} / B ${fmt(b,m.digits)}; ${comparable?"diferença B − A "+signed(b-a,m.digits):measure.limitation} Escala comum definida pelo horizonte ${state.horizon}.`:`Até o período ${state.period}: ${m.label.toLowerCase()} ${fmt(a,m.digits)}. Escala definida pelo horizonte ${state.horizon}.`;
+ $("chart-caption").textContent+=state.n===1?" Sem faixa: uma semente.":" Faixa p10–p90 entre sementes.";
+ $("values-caption").textContent=`${m.label} no período ${state.period} · sementes individuais`;
+ $("values-body").replaceChildren();
+ finals("A").forEach((av,i)=>{const values=[String(runs("A")[i].seed),fmt(av,m.digits)];if(comp){const bv=finals("B")[i];values.push(fmt(bv,m.digits),comparable?signed(bv-av,m.digits):"—");}appendRow($("values-body"),values);});
+ $("conclusion-fact").textContent=state.period===0?"Você está no estado inicial. Avance a linha do tempo para observar entradas, saídas e mudanças antes de interpretar os resultados.":comp?`Nesta simulação, no período ${state.period}, a média de ${m.label.toLowerCase()} foi ${fmt(a,m.digits)} em A (${scenario("A").name}) e ${fmt(b,m.digits)} em B (${scenario("B").name}). A diferença B − A foi ${signed(b-a,m.digits)}. A leitura usa ${state.n} pares nas mesmas sementes.`:`Nesta simulação, no período ${state.period}, a média de ${m.label.toLowerCase()} em ${scenario("A").name} foi ${fmt(a,m.digits)}, com ${state.n} execuções. Em relação ao estado inicial, a diferença foi ${signed(a-initial,m.digits)}.`;
+ if(comp&&!comparable){if(state.period===0)$("conclusion-fact").textContent+=" "+measure.limitation;else $("conclusion-fact").textContent=`Nesta simulação, no período ${state.period}, A (${scenario("A").name}) registra ${fmt(a,m.digits)} e B (${scenario("B").name}) registra ${fmt(b,m.digits)}. ${measure.unit}. ${measure.limitation} A leitura usa ${state.n} pares nas mesmas sementes.`;}
+  $("conclusion-crosscheck").textContent=comp?`No mesmo período: congestionamento A ${fmt(average("A","congestion"),2)} / B ${fmt(average("B","congestion"),2)}; inovações acumuladas A ${fmt(average("A","innovation_cumulative"))} / B ${fmt(average("B","innovation_cumulative"))}. ${differences().length>1?"Vários parâmetros diferem; esta leitura não isola um mecanismo.":"Confira os parâmetros utilizados na preparação."}`:`No mesmo período: congestionamento médio ${fmt(average("A","congestion"),2)} e inovações acumuladas ${fmt(average("A","innovation_cumulative"))}. Confira a configuração e a variabilidade entre sementes antes de generalizar.`;
+  renderVerdicts(comp);
+ const provenance=scenario("A").provenance||data;
+ $("provenance").textContent=`${scenario("A").source==="live"?"Calculado no motor local":"Exemplo registrado"} · modelo ${provenance.version} · commit ${provenance.git_commit||"não disponível"}${provenance.git_dirty?" · árvore com alterações locais":""}. Fontes Geist sob SIL OFL 1.1.`;
+ $("go-final").textContent=comp?"Ver comparação no horizonte":"Ver resultado no horizonte";
+ if(state.step===2){drawTrajectory();updateNetwork();}
+}
+
+function seriesMean(c,key,end){const out=[];for(let p=0;p<=end;p++){const v=runs(c).map(run=>recordAt(run,p)[key]).filter(v=>typeof v==="number"&&Number.isFinite(v));out.push({period:p,value:v.length?v.reduce((a,b)=>a+b,0)/v.length:0});}return out;}
+function mannKendall(values){const n=values.length;if(n<6)return null;let s=0;for(let i=0;i<n-1;i++)for(let j=i+1;j<n;j++)s+=Math.sign(values[j]-values[i]);const varS=n*(n-1)*(2*n+5)/18;if(varS<=0)return null;const z=s>0?(s-1)/Math.sqrt(varS):s<0?(s+1)/Math.sqrt(varS):0;const p=2*(1-0.5*(1+erf(Math.abs(z)/Math.SQRT2)));return {trend:s>0?"increasing":s<0?"decreasing":"none",p,slope:senSlope(values)};}
+function erf(x){const t=1/(1+0.3275911*Math.abs(x)),y=1-((((1.061405429*t-1.453152027)*t+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return x>=0?y:-y;}
+function senSlope(values){const slopes=[];for(let i=0;i<values.length-1;i++)for(let j=i+1;j<values.length;j++)slopes.push((values[j]-values[i])/(j-i));slopes.sort((a,b)=>a-b);const m=slopes.length;return m%2?slopes[(m-1)/2]:(slopes[m/2-1]+slopes[m/2])/2;}
+function fmtP(p){if(p==null||!Number.isFinite(p))return "n/d";if(p<0.0005)return "<0,001";return new Intl.NumberFormat("pt-BR",{minimumFractionDigits:3,maximumFractionDigits:3}).format(p);}
+function verdictText(values,label){const n=values.length;if(n<6)return `${label}: série curta (${n} períodos) — sem veredito`;const mk=mannKendall(values);const first=values[0],last=values[n-1];const pct=first===0?null:100*(last-first)/Math.abs(first);const change=pct==null?"—":new Intl.NumberFormat("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1}).format(Math.abs(pct))+"%";if(!mk||!(mk.p<0.05&&mk.trend!=="none"))return `sem tendência detectável em ${n} períodos`;if(mk.trend==="increasing")return `subiu ${change} em ${n} períodos (tendência crescente, p=${fmtP(mk.p)})`;return `caiu ${change} em ${n} períodos (tendência de queda, p=${fmtP(mk.p)})`;}
+function verdictsFor(c){const end=Math.min(state.period,state.horizon);const means={};for(const key of ["active_startup_count","productive_tie_count","knowledge_mean","innovation_cumulative","capital_total","congestion"])means[key]=seriesMean(c,key,end).map(r=>r.value);const labels={active_startup_count:"startups ativas",productive_tie_count:"parcerias produtivas",knowledge_mean:"conhecimento médio",innovation_cumulative:"inovações acumuladas",capital_total:"capital total",congestion:"congestionamento"};const out={};for(const [key,values] of Object.entries(means))out[key]=verdictText(values,labels[key]);if(end>=0){const cong=means.congestion[end];if(cong>1)out.congestion="acima do limiar de saturação (1,0) — custo extra por organização";}const pop=mannKendall(means.active_startup_count);const estado=!pop||!(pop.p<0.05&&pop.trend!=="none")?"População estável":pop.trend==="increasing"?"População em expansão":"População em retração";const am=means.active_startup_count[end]||0,km=means.knowledge_mean[end]||0,pt=means.productive_tie_count[end]||0;let alert=null,severity="info";if((means.congestion[end]||0)>1){alert="Congestionamento acima de 1: a infraestrutura está saturada e cada organização paga custo extra.";severity="warn";}else if(pop&&pop.p<0.05&&pop.trend==="decreasing"){alert="População caindo de forma consistente: compare as saídas entre períodos.";severity="warn";}return {verdict:`${estado}: ${fmt(am,1)} startups ativas, conhecimento médio ${fmt(km,2)} e ${fmt(pt,1)} parcerias produtivas no período ${state.period}.`,trends:[["startups ativas",means.active_startup_count],["conhecimento médio",means.knowledge_mean],["parcerias produtivas",means.productive_tie_count]].map(([label,values])=>({label,text:verdictText(values,label)})),alert,severity,perSeries:out};}
+function renderVerdicts(comp){const box=$("synthesis-trends");box.replaceChildren();const conditions=comp?["A","B"]:["A"];for(const c of conditions){const v=scenario(c).verdicts&&scenario(c).source==="live"?{verdict:scenario(c).synthesis.verdict,trends:scenario(c).synthesis.trends,alert:scenario(c).synthesis.alert,severity:scenario(c).synthesis.severity,perSeries:scenario(c).verdicts}:verdictsFor(c);const head=document.createElement("li");head.innerHTML="";head.textContent=`${comp?c+" · "+scenario(c).name+": ":""}${v.verdict}`;box.append(head);v.trends.forEach(t=>{const li=document.createElement("li");li.textContent=`${comp?c+" · ":""}${t.label}: ${t.text}`;box.append(li);});if(v.alert){const li=document.createElement("li");li.textContent=`${comp?c+" · ":""}Alerta: ${v.alert}`;box.append(li);}}$("synthesis-verdict").textContent=comp?"Vereditos por cenário (média entre sementes, Mann-Kendall sobre a média). A banda p10–p90 não é intervalo de confiança.":"Veredito do cenário (média entre sementes, Mann-Kendall sobre a média). A banda p10–p90 não é intervalo de confiança.";$("synthesis-alert").textContent="Séries com menos de 6 períodos não recebem veredito. Acima/abaixo descreve valor, não mérito.";}
+function renderedVerdicts(){const out={};for(const c of activeConditions()){const item=scenario(c);out[c]=item.verdicts&&item.source==="live"?{source:"server",verdicts:item.verdicts,synthesis:item.synthesis,definition:item.verdict_metric_definition}:{source:"client",computed:verdictsFor(c).perSeries,synthesis:{verdict:$("synthesis-verdict").textContent},definition:{metrics:["active_startup_count","productive_tie_count","knowledge_mean","innovation_cumulative","capital_total","congestion"],aggregation:"mean across seeds per period",note:"cached example: computed in the browser"}};}return out;}
+function researchEvidence(c){
+ const item=scenario(c),dossier=item.research;
+ return {base_scenario_id:item.base_scenario_id||item.id,parameters_modified:item.research_modified||false,reviewed_on:data.research.reviewed_on,dossier,sources:Object.fromEntries(dossier.sources.map(key=>[key,data.research.sources[key]]))};
+}
+function exportPayload(){
+  const conditions={};
+  for(const c of activeConditions()){const item=scenario(c);const v=item.verdicts&&item.source==="live"?{verdicts:item.verdicts,synthesis:item.synthesis,definition:item.verdict_metric_definition}:null;conditions[c]={id:scenario(c).id,name:scenario(c).name,capacity:scenario(c).capacity,config:scenario(c).config,research:researchEvidence(c),source:scenario(c).source||"cached",provenance:scenario(c).provenance||{version:data.version,runtime:data.runtime,git_commit:data.git_commit,git_dirty:data.git_dirty,source_sha256:data.source_sha256},runs:runs(c).map(run=>({seed:run.seed,initial:run.initial,history:run.history.slice(0,state.period),events:run.events.slice(0,state.period)})),...(v?{verdicts:v.verdicts,synthesis:v.synthesis,verdict_metric_definition:v.definition}:{})};}
+  const provenance=scenario("A").provenance||data;
+  return {schema:"investigation-workbench-4",simulation:true,mode:state.mode,changed_parameters:state.mode==="compare"?differences():[],seeds:state.seeds.slice(0,state.n),horizon:state.period,playback_limit:state.horizon,selected_metric:state.key,measurement:measurement(),verdicts:renderedVerdicts(),version:provenance.version,runtime:provenance.runtime,git_commit:provenance.git_commit,git_dirty:provenance.git_dirty,source_sha256:provenance.source_sha256,interpretation:$("conclusion-fact").textContent,limits:"Simulação exploratória; p10–p90 não é intervalo de confiança; vereditos Mann-Kendall sobre a média entre sementes, séries curtas sem veredito; não é previsão empírica.",conditions};
+}
+function exportCsv(){
+ const payload=exportPayload(),keys=data.metrics;
+ const rows=[["schema","simulation","condition","scenario_id","base_scenario_id","scenario_name","source","capacity","seed","period","model_version","git_commit","git_dirty","config_json","provenance_json","measurement_json",...keys]];
+ for(const [c,item] of Object.entries(payload.conditions))for(const run of item.runs){
+  const config=JSON.stringify({...item.config,seed:run.seed}),provenance=JSON.stringify(item.provenance);
+  for(const row of [run.initial,...run.history])rows.push(["investigation-trajectories-2",true,c,item.id,item.research.base_scenario_id,item.name,item.source,item.capacity,run.seed,row.period,item.provenance.version,item.provenance.git_commit||"",item.provenance.git_dirty,config,provenance,JSON.stringify(payload.measurement),...keys.map(key=>row[key])]);
+ }
+ const cell=value=>{const text=String(value);return /[",\r\n]/.test(text)?'"'+text.replace(/"/g,'""')+'"':text;};
+ return rows.map(row=>row.map(cell).join(",")).join("\r\n");
+}

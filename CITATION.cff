@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Technology Park ABM: agent-based model of technology parks and innovation ecosystems"
+abstract: >-
+  Reproducible agent-based model of a technology park that studies when
+  interactions among startups, anchor firms, universities, investors,
+  workers, and park governance generate increasing returns. The model is
+  deterministic under a supplied seed, performs no network calls, and ships
+  with the investigation workbench (four-step journey with seeded execution
+  and synthesis verdicts), experiment runners (E1-E7), global
+  sensitivity analysis (Morris/Sobol), pattern-oriented validation, and a
+  validated public-data pipeline.
+version: 1.0.0
+date-released: 2026-11-09
+license: MIT
+repository-code: "https://github.com/doutorprestes/technology-park-abm"
+url: "https://github.com/doutorprestes/technology-park-abm"
+authors:
+  - name: "doutorprestes"
+    email: "contato@joseprestes.com"
+keywords:
+  - agent-based model
+  - ABM
+  - innovation ecosystem
+  - technology park
+  - increasing returns
+  - network externalities
+  - knowledge diffusion
+  - reproducible research
+  - Mesa
+preferred-citation:
+  type: software
+  title: "Technology Park ABM: agent-based model of technology parks and innovation ecosystems"
+  version: 1.0.0
+  date-released: 2026-11-09
+  license: MIT
+  repository-code: "https://github.com/doutorprestes/technology-park-abm"
+  authors:
+    - name: "doutorprestes"
+      email: "contato@joseprestes.com"

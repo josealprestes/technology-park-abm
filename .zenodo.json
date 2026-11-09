@@ -1,0 +1,36 @@
+{
+  "title": "Technology Park ABM: agent-based model of technology parks and innovation ecosystems",
+  "upload_type": "software",
+  "description": "<p>Reproducible agent-based model of a technology park that studies when interactions among startups, anchor firms, universities, investors, workers, and park governance generate increasing returns.</p><p>The model is deterministic under a supplied seed, performs no network calls, and ships with the investigation workbench (seeded execution, synthesis verdicts), experiment runners (E1-E7), Morris/Sobol global sensitivity analysis, pattern-oriented validation, and a validated public-data pipeline. Simulation outputs are labeled as simulation and are never presented as empirical facts.</p>",
+  "creators": [
+    {
+      "name": "doutorprestes"
+    }
+  ],
+  "license": "mit",
+  "access_right": "open",
+  "keywords": [
+    "agent-based model",
+    "ABM",
+    "innovation ecosystem",
+    "technology park",
+    "increasing returns",
+    "network externalities",
+    "knowledge diffusion",
+    "reproducible research"
+  ],
+  "version": "1.0.0",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/doutorprestes/technology-park-abm",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "grants": [],
+  "communities": [
+    {
+      "identifier": "comses"
+    }
+  ]
+}

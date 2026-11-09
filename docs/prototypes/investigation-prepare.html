@@ -1,0 +1,33 @@
+ <section data-page="1" aria-labelledby="title-1" hidden>
+  <p class="eyebrow">Preparar · Escolher, entender, ajustar e executar</p>
+  <h1 id="title-1" tabindex="-1">Como você quer investigar?</h1>
+  <p class="lede">Observe a evolução de um cenário ou compare duas configurações. Você pode partir de um roteiro e alterar seus parâmetros.</p>
+  <fieldset class="mode-options"><legend>1. Escolha o caminho</legend>
+   <label class="selected"><input type="radio" name="investigation-mode" value="observe" checked><span>Observar um cenário<small>Acompanhar agentes, eventos e indicadores ao longo do tempo.</small></span></label>
+   <label><input type="radio" name="investigation-mode" value="compare"><span>Comparar dois cenários<small>Examinar diferenças com as mesmas sementes e horizonte.</small></span></label>
+  </fieldset>
+  <h2 class="setup-heading">2. Escolha e entenda o roteiro de partida</h2>
+  <p class="small">As explicações abaixo são informações para leitura. Elas não alteram a simulação.</p>
+  <details class="actor-note research-dossier"><summary>Como escolher entre os roteiros e por que eles estão aqui?</summary><p id="research-selection"></p><p id="research-scope" class="small"></p><p id="research-limitations" class="small"></p><details class="actor-note"><summary>Bibliografia da seleção · teoria, estudos empíricos e ABM</summary><div id="scenario-bibliography"></div></details></details>
+  <div class="scenario-selectors" id="scenario-selectors"><div><label for="scenario-a" id="scenario-label-a">Roteiro de partida</label><select id="scenario-a"></select><div id="scenario-description-a" class="scenario-description scenario-info"></div></div><div id="scenario-b-panel" data-compare-only hidden><label for="scenario-b">B · Segundo roteiro</label><select id="scenario-b"></select><div id="scenario-description-b" class="scenario-description scenario-info"></div></div></div>
+  <details class="actor-note"><summary>Conhecer todos os roteiros antes de escolher</summary><ul id="scenario-catalog" class="catalog-list"></ul></details>
+  <h2 class="setup-heading">3. Personalize os parâmetros, se desejar</h2>
+  <p>Os controles desta área alteram a configuração. Os valores iniciais vêm do roteiro escolhido; abrir ou ler uma explicação não muda nenhum valor.</p>
+  <div class="scenario-selectors"><div><details class="editor-block" id="editor-details-a"><summary id="editor-title-a">Alterar parâmetros do cenário</summary><p class="small">Campos editáveis · alterações só serão simuladas ao executar.</p><div id="params-editor-a"></div><button type="button" id="reset-params-a">Restaurar valores do roteiro</button></details><p class="small" id="changes-a"></p></div><div data-compare-only hidden><details class="editor-block" id="editor-details-b"><summary>Alterar parâmetros de B</summary><p class="small">Campos editáveis · alterações só serão simuladas ao executar.</p><div id="params-editor-b"></div><button type="button" id="reset-params-b">Restaurar valores do roteiro B</button></details><p class="small" id="changes-b"></p></div></div>
+  <h2 class="setup-heading" id="review-heading" tabindex="-1">4. Confira e execute</h2>
+  <div class="configure"><div>
+   <p class="read-only">Conferência · somente leitura</p>
+   <div class="table-wrap" data-compare-only hidden><table><caption>Diferenças entre as configurações que serão executadas</caption><thead><tr><th scope="col">Parâmetro</th><th scope="col">A</th><th scope="col">B</th></tr></thead><tbody id="parameter-differences"></tbody></table></div>
+   <p class="notice" id="comparison-warning"></p>
+   <details class="actor-note"><summary>Conferir todos os valores que serão utilizados</summary><div class="config-table"><table><caption>Configuração a executar · somente leitura</caption><thead><tr><th scope="col">Parâmetro</th><th scope="col" id="config-head-a">Cenário</th><th scope="col" data-compare-only hidden>B</th></tr></thead><tbody id="all-parameters"></tbody></table></div></details>
+   <details class="actor-note"><summary>O que significa repetir com sementes diferentes?</summary><p>Cada semente reproduz uma trajetória. Repetições mostram quanto os resultados variam entre essas trajetórias. Na comparação, A e B usam as mesmas sementes; agentes e eventos ainda podem divergir.</p></details>
+  </div><div class="run-panel">
+   <div class="field"><label for="replicates">Quantas sementes executar?</label><select id="replicates" aria-describedby="replicates-help"><option value="1">1 · Uma trajetória</option><option value="4" selected>4 · Observar variabilidade</option><option value="8">8 · Observar variabilidade</option></select><p class="small" id="replicates-help">Com 2 ou mais sementes, os gráficos incluem a faixa p10–p90.</p></div>
+   <div class="field"><label for="seed-base">Semente inicial</label><input id="seed-base" type="number" min="0" max="1000000" step="1" value="1" required><p class="small">As repetições usam sementes consecutivas a partir deste valor.</p></div>
+   <div class="field"><label for="horizon">Até qual período?</label><select id="horizon"><option value="20">Período 20</option><option value="40">Período 40</option><option value="60" selected>Período 60</option><option value="80">Período 80</option></select></div>
+   <p class="small" id="engine-availability">Verificando o motor local…</p>
+   <div class="actions"><button type="button" class="primary" id="run-config">Executar meu cenário</button><button type="button" id="cancel-run" hidden>Cancelar execução</button></div>
+   <progress id="run-progress" max="100" value="0" hidden></progress><p id="run-status" role="status" aria-live="polite"></p>
+   <details class="actor-note"><summary>Explorar exemplos já calculados</summary><p class="small">Usa os valores originais dos roteiros, sementes 1–8 e até 80 períodos. Alterações personalizadas precisam ser executadas no motor local.</p><button type="button" id="use-example">Explorar exemplo sem alterações</button></details>
+  </div></div>
+ </section>

@@ -1,0 +1,67 @@
+{
+  "@context": [
+    "https://doi.org/10.5063/schema/codemeta-2.0",
+    "https://w3id.org/software-types"
+  ],
+  "@type": "SoftwareSourceCode",
+  "name": "Technology Park ABM",
+  "description": "Reproducible agent-based model of a technology park that studies when interactions among startups, anchor firms, universities, investors, workers, and park governance generate increasing returns. Deterministic under a supplied seed; no network calls in the model; investigation workbench with seeded execution and synthesis verdicts; experiment runners (E1-E7); Morris/Sobol global sensitivity analysis; pattern-oriented validation; validated public-data pipeline.",
+  "dateCreated": "2026-10-06",
+  "datePublished": "2026-11-09",
+  "version": "1.0.0",
+  "license": "https://spdx.org/licenses/MIT",
+  "url": "https://github.com/doutorprestes/technology-park-abm",
+  "codeRepository": "https://github.com/doutorprestes/technology-park-abm",
+  "issueTracker": "https://github.com/doutorprestes/technology-park-abm/issues",
+  "programmingLanguage": [
+    {
+      "@type": "ComputerLanguage",
+      "name": "Python",
+      "version": "3.12"
+    }
+  ],
+  "runtimePlatform": "Python 3.12+",
+  "operatingSystem": [
+    "Linux",
+    "macOS",
+    "Windows"
+  ],
+  "author": [
+    {
+      "@type": "Person",
+      "name": "doutorprestes",
+      "email": "contato@joseprestes.com"
+    }
+  ],
+  "keywords": [
+    "agent-based model",
+    "ABM",
+    "innovation ecosystem",
+    "technology park",
+    "increasing returns",
+    "network externalities",
+    "knowledge diffusion",
+    "reproducible research"
+  ],
+  "softwareRequirements": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "mesa",
+      "version": ">=3.5,<4"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "networkx",
+      "version": ">=3,<4"
+    }
+  ],
+  "developmentStatus": "active",
+  "isAccessibleForFree": true,
+  "applicationCategory": "Scientific/Engineering > Artificial Intelligence",
+  "referencePublication": {
+    "@type": "SoftwareSourceCode",
+    "name": "Technology Park ABM",
+    "version": "1.0.0",
+    "repository-code": "https://github.com/doutorprestes/technology-park-abm"
+  }
+}
